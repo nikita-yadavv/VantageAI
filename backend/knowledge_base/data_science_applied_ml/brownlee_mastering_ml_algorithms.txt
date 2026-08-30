@@ -1,0 +1,37 @@
+# Knowledge Corpus: Master Machine Learning Algorithms (Jason Brownlee)
+
+## Data Preparation & Feature Engineering Foundations
+Data preparation directly transforms raw observations into a representation that unlocks learning algorithm performance.
+- Rescaling & Normalization: Min-Max scaling transforms values to [0, 1] range: x_norm = (x - min(x)) / (max(x) - min(x)). Sensitive to outliers.
+- Standardization (Z-Score): Centers features around mean 0 with standard deviation 1: z = (x - mu) / sigma. Essential for distance-based algorithms (k-NN, SVM, K-Means) and gradient descent optimization.
+- Robust Scaling: Uses median and interquartile range (IQR) to scale data in the presence of heavy outliers.
+- Categorical Encoding:
+  - One-Hot Encoding: Creates binary indicator columns for nominal categories. Avoids imposing false ordinal relationships but increases dimensionality.
+  - Target Encoding / Mean Encoding: Replaces category with target mean, requires smoothing to prevent target leakage and overfitting.
+  - Ordinal Encoding: Maps ordered categories to discrete integer ranks.
+- Handling Missing Values: Mean/Median imputation for MCAR (Missing Completely at Random), K-NN / Iterative multivariate imputation (MICE) for MAR (Missing at Random), or dedicated missingness indicator columns.
+
+## Logistic Regression & Generalized Linear Models
+Logistic regression models the log-odds (logit) of probability for binary classification:
+- Logit function: ln(p / (1 - p)) = beta_0 + beta_1 * x_1 + ... + beta_k * x_k
+- Sigmoid activation: p(y=1|x) = 1 / (1 + exp(- (w^T * x + b)))
+- Maximum Likelihood Estimation (Binary Cross-Entropy Loss):
+  L(w) = - 1/N * sum [ y_i * log(p_i) + (1 - y_i) * log(1 - p_i) ]
+- Odds Ratio interpretation: A unit increase in feature x_j multiplies the odds of positive class by exp(beta_j), holding other variables constant.
+
+## Cross-Validation & Resampling Strategies
+Resampling techniques assess how a predictive model generalizes to an independent dataset.
+- K-Fold Cross-Validation: Splits dataset into k equal partitions, trains on k-1 folds, and validates on the remaining fold across k iterations.
+- Stratified K-Fold: Preserves the percentage of samples for each target class within every fold. Mandatory for imbalanced datasets to avoid folds with zero minority class instances.
+- Repeated K-Fold: Repeats k-fold multiple times with different random shuffles to compute empirical confidence intervals of model metrics.
+- Time Series Split (Rolling Window / Expanding Window): Trains on historical periods and tests strictly on subsequent future windows to prevent temporal data leakage and lookahead bias.
+- Nested Cross-Validation: Outer loop evaluates generalization error; inner loop tunes hyperparameters (GridSearchCV / Bayesian Optimization) to prevent optimistic tuning bias.
+
+## Handling Class Imbalance
+When positive target classes represent a small fraction (< 5%) of the dataset:
+- Resampling Techniques:
+  - Random Undersampling (majority class reduction - risks throwing away valuable information).
+  - Synthetic Minority Over-sampling Technique (SMOTE): Synthesizes new minority instances along line segments connecting k-nearest neighbors in feature space.
+  - Borderline-SMOTE and ADASYN: Focus synthetic generation on difficult boundary regions.
+- Algorithmic Techniques: Cost-sensitive learning adjusting class weights inversely proportional to class frequencies: w_pos = N / (2 * N_pos).
+- Evaluation Protocol: Rely on Precision-Recall AUC, F-beta score (e.g., F2 prioritizing recall), and Matthews Correlation Coefficient (MCC) rather than classification accuracy or standard ROC-AUC.

@@ -1,0 +1,64 @@
+# Knowledge Corpus: Machine Learning (Tom Mitchell)
+
+## Chapter 1: Foundations & The Learning Problem
+A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E. 
+Designing a learning system requires choosing the training experience (direct vs indirect feedback), target function (e.g., ChooseMove: Board -> Move), representation of the target function (linear combination, decision tree, neural network), and learning algorithm (gradient descent, LMS rule).
+
+## Chapter 2: Concept Learning & General-to-Specific Ordering
+Concept learning involves inferring a boolean-valued function from training examples of its input and output.
+- Hypothesis Space (H): The set of all possible concepts.
+- Find-S Algorithm: Finds maximally specific hypothesis consistent with positive training examples. Ignores negative examples and cannot detect if training data is inconsistent.
+- Candidate Elimination Algorithm: Computes the Version Space, representing all hypotheses consistent with the training instances using General (G) and Specific (S) boundary sets.
+- Inductive Bias: The set of assumptions that the learner uses to predict outputs of unseen instances. Without inductive bias, a learner has no rational basis for classifying unobserved instances beyond rote memorization.
+
+## Chapter 3: Decision Tree Learning & Information Theory
+Decision tree learning is a method for approximating discrete-valued target functions.
+- Entropy: Measures the impurity or randomness in a collection of examples S:
+  Entropy(S) = - sum_{i=1}^{c} p_i * log2(p_i)
+  where p_i is the proportion of S belonging to class i.
+- Information Gain: The expected reduction in entropy caused by partitioning the examples according to attribute A:
+  Gain(S, A) = Entropy(S) - sum_{v in Values(A)} (|S_v| / |S|) * Entropy(S_v)
+- ID3 Algorithm: Top-down greedy search through the space of possible decision trees without backtracking. It calculates Information Gain for each attribute and selects the one with the highest gain as the decision node.
+- C4.5 Improvements: Handles continuous attributes via dynamic threshold splits, deals with missing attribute values, and uses Gain Ratio to penalize attributes with large numbers of distinct values:
+  GainRatio(S, A) = Gain(S, A) / SplitInformation(S, A)
+  SplitInformation(S, A) = - sum_{v in Values(A)} (|S_v| / |S|) * log2(|S_v| / |S|)
+- Overfitting Mitigation: Reduced error pruning (post-pruning using validation set) and Rule Post-Pruning (converting tree to rules and pruning individual preconditions).
+
+## Chapter 4: Artificial Neural Networks & Backpropagation
+Artificial Neural Networks provide a robust approach to approximating real-valued, discrete-valued, and vector-valued target functions.
+- Perceptron: Computes a linear combination of inputs: o = sgn(w . x). Perceptron training rule converges if training examples are linearly separable.
+- Delta Rule & Gradient Descent: For continuous linear units, minimizes the sum of squared errors E(w) = 0.5 * sum_{d} (t_d - o_d)^2 by updating weights in the direction of negative gradient:
+  Delta w_i = eta * sum_{d} (t_d - o_d) * x_{i,d}
+- Multilayer Networks & Sigmoid / ReLU Units: Overcomes linear separability limits.
+  Sigmoid activation: sigma(y) = 1 / (1 + exp(-y)), derivative sigma'(y) = sigma(y) * (1 - sigma(y)).
+- Backpropagation Algorithm: Uses chain rule of calculus to compute error gradients with respect to weights across hidden and output layers:
+  Output layer error: delta_k = (t_k - o_k) * o_k * (1 - o_k)
+  Hidden layer error: delta_h = o_h * (1 - o_h) * sum_{k in outputs} w_{kh} * delta_k
+  Weight update: Delta w_{ji} = eta * delta_j * x_{ji} + alpha * Delta w_{ji}(previous) [where alpha is momentum].
+
+## Chapter 5: Evaluating Hypotheses & Statistical Significance
+- Sample Error vs True Error: Sample error is the fraction of mistakes on sample S; True error is the probability of misclassifying a single randomly drawn instance from distribution D.
+- Confidence Intervals: For large samples (N >= 30), sample error follows a Normal distribution approximation. A 95% confidence interval is sample_error +/- 1.96 * sqrt(sample_error * (1 - sample_error) / N).
+- Paired t-Test: Used to compare two learning algorithms on the same k-fold cross-validation splits to verify if performance differences are statistically significant rather than due to data sampling variance.
+
+## Chapter 6: Bayesian Learning & Probabilistic Inference
+Bayesian reasoning provides a probabilistic approach to inference.
+- Bayes Theorem: P(h|D) = (P(D|h) * P(h)) / P(D)
+  - P(h): Prior probability of hypothesis h.
+  - P(D|h): Likelihood of observing data D given hypothesis h.
+  - P(h|D): Posterior probability of h given observed data D.
+- Maximum A Posteriori (MAP) Hypothesis: h_MAP = argmax_{h in H} P(D|h) * P(h).
+- Maximum Likelihood (ML) Hypothesis: When priors are uniform, h_ML = argmax_{h in H} P(D|h).
+- Naive Bayes Classifier: Assumes attribute values are conditionally independent given the target class:
+  v_NB = argmax_{v_j in V} P(v_j) * prod_{i} P(a_i | v_j)
+  Handles zero-frequency probabilities using Laplace smoothing or m-estimate: P(a_i | v_j) = (n_c + m*p) / (n + m).
+- Minimum Description Length (MDL) Principle: h_MDL = argmax (-log2 P(h) - log2 P(D|h)), balancing hypothesis complexity against training error (Occam's razor).
+
+## Chapter 13: Reinforcement Learning
+Reinforcement Learning addresses how an autonomous agent acting in an environment can learn to choose actions to achieve long-term goals.
+- Markov Decision Process (MDP): Defined by state space S, action space A, transition probability P(s' | s, a), and reward function R(s, a).
+- Cumulative Discounted Reward: V = sum_{t=0}^{inf} gamma^t * r_t, where gamma in [0, 1) is discount factor.
+- Q-Learning: Learns action-value function Q(s, a) without prior model of transition probabilities:
+  Q(s, a) <- Q(s, a) + alpha * [ r + gamma * max_{a'} Q(s', a') - Q(s, a) ]
+  Bellman Optimality: Q*(s, a) = R(s, a) + gamma * sum_{s'} P(s'|s,a) * max_{a'} Q*(s', a').
+- Exploration vs Exploitation: Balancing choosing the best-known action (exploitation) with exploring unvisited actions (e-greedy or Boltzmann softmax policy).

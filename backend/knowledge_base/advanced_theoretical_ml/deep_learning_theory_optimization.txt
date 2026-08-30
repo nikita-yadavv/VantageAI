@@ -1,0 +1,30 @@
+# Knowledge Corpus: Deep Learning Theory, Optimization & Transformer Architecture
+
+## Optimization Landscapes & Gradient Dynamics
+- Non-Convex Optimization: Deep neural network loss surfaces feature pervasive saddle points, plateaus, and local minima.
+- Momentum & Nesterov Accelerated Gradient: Accelerates SGD in directions of consistent gradient and dampens oscillations:
+  v_t = gamma * v_{t-1} + eta * grad_theta J(theta - gamma * v_{t-1})
+- Adaptive Learning Rate Optimizers:
+  - RMSProp: Scales gradient updates inversely by root mean square of historical gradients.
+  - Adam (Adaptive Moment Estimation): Maintains exponentially decaying averages of past gradients (first moment m_t) and squared gradients (second moment v_t) with bias correction terms:
+    m_hat_t = m_t / (1 - beta_1^t),  v_hat_t = v_t / (1 - beta_2^t)
+    theta_{t+1} = theta_t - (eta / (sqrt(v_hat_t) + eps)) * m_hat_t
+  - AdamW: Decouples weight decay regularization from gradient updates, fixing gradient magnitude distortion in standard Adam.
+
+## Vanishing/Exploding Gradients & Normalization Techniques
+- Gradient Vanishing in Deep Networks: Repeated multiplications of Jacobian matrices with spectral radius < 1 in backpropagation causes exponential decay of early layer gradients.
+- Architectural Solutions:
+  - Residual Connections (ResNets): Adds skip connections x + F(x), allowing gradients to propagate directly through the identity shortcut during backpropagation: dLoss/dx = dLoss/dOutput * (dF/dx + I).
+  - Layer Normalization: Normalizes activations across the feature/channel dimension for each sample independently:
+    LN(x) = ((x - mu_L) / (sqrt(sigma_L^2 + eps))) * gamma + beta
+    Crucial for Transformers and variable-length sequence models.
+  - Batch Normalization: Normalizes across the mini-batch dimension; effective for CNNs but sensitive to mini-batch sizes.
+
+## Attention Mechanisms & Modern Transformer Architecture
+- Scaled Dot-Product Attention:
+  Attention(Q, K, V) = softmax((Q * K^T) / sqrt(d_k)) * V
+  The scaling factor 1 / sqrt(d_k) prevents dot products from growing excessively large in high dimensions, which would push softmax into regions with vanishingly small gradients.
+- Multi-Head Attention: Projects Queries, Keys, and Values into h distinct linear subspaces, enabling the model to jointly attend to information from different representation subspaces and positions:
+  MultiHead(Q, K, V) = Concat(head_1, ..., head_h) * W^O
+  where head_i = Attention(Q * W_i^Q, K * W_i^K, V * W_i^V).
+- Positional Encodings: Injects order information into permutation-invariant self-attention via sinusoidal functions or learnable / rotary positional embeddings (RoPE).

@@ -1,0 +1,29 @@
+Priya Sharma
+Email: priya.sharma@example.com | LinkedIn: linkedin.com/in/priyasharma-ds | Portfolio: priyasharma.io
+
+SUMMARY
+Applied Data Scientist with 3.5 years of experience leading predictive analytics, feature engineering, and statistical modeling in high-velocity environments. Specialized in Scikit-Learn pipelines, XGBoost/LightGBM modeling, class imbalance remediation, and production model drift monitoring.
+
+CORE SKILLS
+- Machine Learning & Statistics: Logistic Regression, Random Forest, XGBoost, LightGBM, Stratified K-Fold, Time Series Split, Hypothesis Testing, A/B Testing.
+- Data Wrangling & Feature Engineering: Pandas, NumPy, Scikit-Learn ColumnTransformer, SMOTE, One-Hot Encoding, Target Encoding, Outlier Treatment.
+- MLOps & Experimentation: MLflow, Weights & Biases, Scikit-Learn Pipelines, Model Drift Monitoring (KS-test, PSI), Docker.
+- Languages & Tools: Python, SQL (PostgreSQL, BigQuery), FastAPI, Git, Jupyter.
+
+PROFESSIONAL EXPERIENCE
+
+Applied Data Scientist | RetailPulse Analytics | 2022 - Present
+- Built customer churn prediction model on 2M+ customer dataset using XGBoost and SMOTE for extreme class imbalance (3% positive class), achieving PR-AUC of 0.84 and saving an estimated $1.2M in annual retention.
+- Constructed end-to-end Scikit-Learn preprocessing pipelines with custom transformers to prevent data leakage during k-fold cross-validation.
+- Deployed real-time model monitoring tracking feature covariate shift and concept drift using Population Stability Index (PSI).
+
+Junior Data Scientist | InsightMetrics | 2021 - 2022
+- Conducted multivariate statistical analysis, feature importance evaluation via Permutation Importance, and designed A/B tests for recommendation engine algorithms.
+- Optimized Pandas data transformation pipelines using vectorization and category downcasting, cutting batch ETL runtime by 65%.
+
+PROJECTS
+- Fraud Detection Pipeline: End-to-end pipeline handling heavily skewed credit card transaction data using cost-sensitive learning and Precision-Recall threshold tuning.
+- Time-Series Demand Forecasting: Built expanding-window cross-validated regression models predicting product inventory needs.
+
+EDUCATION
+M.S. in Data Science & Analytics, 2021

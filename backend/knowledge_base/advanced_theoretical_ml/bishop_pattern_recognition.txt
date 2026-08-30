@@ -1,0 +1,33 @@
+# Knowledge Corpus: Pattern Recognition and Machine Learning (Christopher Bishop)
+
+## Probability Theory & Decision Theory Foundations
+- Sum Rule of Probability: p(X) = sum_{Y} p(X, Y) [marginalization].
+- Product Rule of Probability: p(X, Y) = p(Y | X) * p(X).
+- Bayes Theorem: p(Y | X) = (p(X | Y) * p(Y)) / p(X).
+- Loss Functions & Decision Boundaries: Minimizing expected loss E[L] = sum_{k} sum_{j} integral_{R_j} L_{kj} * p(x, C_k) dx. For 0-1 loss, this simplifies to choosing the class with the highest posterior probability p(C_k | x).
+- Generative vs Discriminative Models:
+  - Generative: Models joint distribution p(x, C_k) = p(x | C_k) * p(C_k) (e.g., Gaussian Mixture Models, Naive Bayes).
+  - Discriminative: Directly models posterior class probabilities p(C_k | x) (e.g., Logistic Regression, Support Vector Machines).
+
+## Maximum Likelihood vs Bayesian Inference & Prior Conjugacy
+- Maximum Likelihood (ML): Finds parameter vector theta that maximizes log-likelihood: theta_ML = argmax sum_{n=1}^N ln p(x_n | theta). Prone to overfitting in small datasets ("zero-count" or extreme parameter values).
+- Maximum A Posteriori (MAP): Incorporates prior distribution p(theta): theta_MAP = argmax [ ln p(X | theta) + ln p(theta) ].
+- Full Bayesian Approach: Treats parameters as random variables and marginalizes over the posterior distribution rather than picking a point estimate:
+  p(x_new | X) = integral p(x_new | theta) * p(theta | X) d(theta).
+- Conjugate Priors: A prior is conjugate to the likelihood if the resulting posterior belongs to the same family of probability distributions (e.g., Beta prior for Binomial likelihood, Dirichlet prior for Multinomial, Gaussian-Gamma for Gaussian with unknown mean and precision).
+
+## Latent Variable Models & Expectation-Maximization (EM) Algorithm
+When models contain observed variables X and unobserved latent variables Z:
+- Incomplete-data log likelihood ln p(X | theta) = ln sum_{Z} p(X, Z | theta) is analytically intractable due to summation inside the logarithm.
+- Expectation Step (E-step): Evaluates the posterior distribution of the latent variables given current parameter estimates:
+  gamma(z_{nk}) = p(z_{nk} = 1 | x_n, theta^{old})
+- Maximization Step (M-step): Re-estimates parameters by maximizing the expected complete-data log-likelihood (Q-function):
+  theta^{new} = argmax_{theta} sum_{Z} p(Z | X, theta^{old}) * ln p(X, Z | theta)
+- Guaranteed convergence: Each EM iteration is proven to never decrease the marginal likelihood p(X | theta).
+
+## Dimensionality Reduction & Principal Component Analysis (PCA)
+- Maximum Variance Formulation: Seeks orthogonal unit vectors u_1, u_2, ... that maximize the variance of the projected data points:
+  Var(u_1^T * X) = u_1^T * S * u_1, where S is the sample covariance matrix.
+- Eigenvalue Problem: Using Lagrange multiplier lambda_1 subject to u_1^T * u_1 = 1 yields:
+  S * u_1 = lambda_1 * u_1. The principal components correspond to the eigenvectors of S with the largest eigenvalues.
+- Probabilistic PCA & Variational Autoencoders: Extends classical PCA to a latent generative Gaussian model, facilitating Bayesian inference and handling missing data.

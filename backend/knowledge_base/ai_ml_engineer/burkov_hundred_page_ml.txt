@@ -1,0 +1,40 @@
+# Knowledge Corpus: The Hundred-Page Machine Learning Book (Andriy Burkov)
+
+## Fundamental Terminology & Supervised vs Unsupervised
+Supervised learning uses labeled training examples {(x_i, y_i)} to learn a mapping function f: X -> Y.
+Unsupervised learning analyzes unlabeled data {x_i} to discover intrinsic patterns, clustering structures (k-Means, DBSCAN, Hierarchical), or latent manifolds (PCA, t-SNE, UMAP).
+Semi-supervised learning leverages a small labeled dataset with a large unlabeled corpus (e.g., pseudo-labeling, consistency regularization).
+
+## The Bias-Variance Tradeoff & Generalization
+- Expected Generalization Error = Bias^2 + Variance + Irreducible Noise.
+- Underfitting (High Bias): Model is overly simplistic and cannot capture underlying data patterns. Occurs with linear models on non-linear data or excessive regularization. Mitigated by increasing model complexity, adding polynomial/interaction features, reducing regularization.
+- Overfitting (High Variance): Model memorizes training noise and fails to generalize to unseen test distributions. Mitigated by regularization (L1/L2, Dropout), cross-validation, data augmentation, early stopping, and ensemble methods.
+
+## Regularization Strategies
+- L1 Regularization (Lasso): Adds penalty lambda * sum |w_i|. Promotes sparsity by driving irrelevant feature weights exactly to zero, serving as embedded feature selection. Diamond-shaped L1 constraint ball intersects objective contours at axes.
+- L2 Regularization (Ridge / Weight Decay): Adds penalty 0.5 * lambda * sum w_i^2. Shrinks weight magnitudes proportionally without driving them strictly to zero. Smooth circular constraint surface.
+- Elastic Net: Convex combination of L1 and L2 penalties: L = Loss + lambda_1 * |w| + lambda_2 * ||w||^2. Ideal for handling collinear features.
+- Dropout: Randomly deactivates a fraction p of hidden units during forward passes in training, preventing co-adaptation of features and acting as an ensemble of exponentially many sub-networks.
+
+## Support Vector Machines (SVM) & Kernel Trick
+SVM seeks an optimal hyperplane that maximizes the geometric margin between classes:
+- Optimization formulation: min 0.5 * ||w||^2 + C * sum xi_i subject to y_i * (w . x_i + b) >= 1 - xi_i.
+- Soft Margin (C parameter): Controls trade-off between maximizing margin width and minimizing classification violation penalty xi_i.
+- Dual Representation & Support Vectors: Only data points lying on or inside the margin boundary (support vectors) influence the decision boundary.
+- Kernel Trick: Implicitly maps inputs to higher-dimensional Hilbert space via Mercer kernel function K(x, z) = phi(x) . phi(z) without explicit high-dimensional feature computation. Common kernels: Polynomial, Radial Basis Function (RBF / Gaussian: exp(-gamma * ||x - z||^2)), Sigmoid.
+
+## Ensemble Methods: Bagging, Boosting & Stacking
+- Bootstrap Aggregating (Bagging): Trains multiple independent base estimators on bootstrap samples (sampling with replacement) and averages predictions (e.g., Random Forest). Reduces variance without increasing bias.
+- Random Forest: Combines bagging with random subspace feature selection at each tree split, decorrelating individual decision trees. Out-of-Bag (OOB) error provides unbiased validation score.
+- Boosting: Sequentially trains weak learners where each subsequent learner focuses on samples misclassified by previous learners. Reduces bias and variance.
+  - AdaBoost: Adjusts sample weights exponentially based on prior prediction error.
+  - Gradient Boosted Decision Trees (GBDT): Fits new trees to the negative gradient (pseudo-residuals) of the loss function.
+  - XGBoost / LightGBM / CatBoost: Incorporates second-order Taylor expansion gradients (Hessian), column sub-sampling, histogram-based split finding, and explicit tree complexity regularization (gamma * T + 0.5 * lambda * ||w||^2).
+
+## Evaluation Metrics & Classification Thresholds
+- Confusion Matrix: True Positives (TP), False Positives (FP), True Negatives (TN), False Negatives (FN).
+- Precision = TP / (TP + FP) (critical when cost of False Alarm is high, e.g., spam filtering).
+- Recall (Sensitivity) = TP / (TP + FN) (critical when missing positive cases is costly, e.g., medical disease diagnosis).
+- F1-Score = 2 * (Precision * Recall) / (Precision + Recall) (harmonic mean).
+- ROC-AUC: Plots True Positive Rate vs False Positive Rate across all decision thresholds. Invariant to class prevalence, measuring ranking capability.
+- Precision-Recall Curve (PR-AUC): Superior metric for severe class imbalance where ROC-AUC gives overly optimistic assessments.

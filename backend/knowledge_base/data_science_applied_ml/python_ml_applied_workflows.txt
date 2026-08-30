@@ -1,0 +1,21 @@
+# Knowledge Corpus: Applied Python Machine Learning & Production Workflows
+
+## Production Scikit-Learn Pipelines & Leakage Prevention
+Constructing robust machine learning pipelines in Python requires strict separation between training and evaluation phases.
+- Data Leakage Risks: Fitting transformers (scalers, encoders, imputers) on the full dataset before splitting leaks test set statistics (mean, variance, distribution) into training, causing overly optimistic validation results.
+- `sklearn.pipeline.Pipeline` & `ColumnTransformer`: Bundles preprocessing and model estimator into an atomic object. `fit()` is called exclusively on training folds, and `transform()` is applied to validation/test sets without updating internal state.
+- Custom Transformers: Implementing `BaseEstimator` and `TransformerMixin` with explicit `fit(X, y)` and `transform(X)` methods ensures reproducible preprocessing.
+
+## High-Performance Data Processing with Pandas & NumPy
+Optimizing data science pipelines in Python requires memory efficiency and vectorization:
+- Vectorization: Replacing Python iterative loops (`for`, `apply`) with compiled C-level vectorized NumPy array operations and broadcasting.
+- Memory Optimization: Downcasting numeric types (e.g., `float64` to `float32`, `int64` to `int16`) and converting low-cardinality string columns to `category` dtype, reducing RAM footprint by 70-80%.
+- Chunked Processing: Processing massive datasets exceeding RAM via `pandas.read_csv(..., chunksize=N)` or distributed engines (Polars, DuckDB, PySpark).
+
+## Experiment Tracking, Model Registry & Artifact Management
+- MLflow / Weights & Biases: Tracking hyperparameters (learning rate, batch size, tree depth), performance metrics across epochs, model architecture summaries, and dataset hash signatures.
+- Model Serialization: Persisting trained models with format safety considerations (ONNX format for cross-platform inference runtime, Joblib for Scikit-Learn pipelines, Safetensors for deep learning weights instead of insecure raw Python `pickle`).
+- Data & Model Drift Detection:
+  - Concept Drift: Change in statistical relationship between features and target P(Y|X).
+  - Covariate Shift (Data Drift): Change in input feature distributions P(X) measured via Kolmogorov-Smirnov (KS) test or Population Stability Index (PSI).
+  - Monitoring latency, throughput, prediction confidence distributions, and fallback circuit breakers in production serving.

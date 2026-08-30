@@ -1,0 +1,25 @@
+# Knowledge Corpus: API Architecture, Concurrency & Security Engineering
+
+## Modern API Protocols & Architectural Paradigms
+- RESTful Principles: Resource-oriented URIs, standard HTTP verbs (GET, POST, PUT, PATCH, DELETE), stateless interactions, and standard HTTP response status codes (200 OK, 201 Created, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 409 Conflict, 429 Too Many Requests, 500 Internal Server Error).
+- Idempotency in APIs: An operation is idempotent if making multiple identical requests produces the exact same server state as a single request. GET, PUT, and DELETE are inherently idempotent. POST is made idempotent using client-generated `Idempotency-Key` headers stored in Redis with atomic `SETNX`.
+- GraphQL vs gRPC:
+  - GraphQL: Client-specified query schema eliminating over-fetching and under-fetching; requires query depth limiting and N+1 query batching via DataLoader.
+  - gRPC: High-performance RPC over HTTP/2 using Protocol Buffers (Protobuf) binary serialization, multiplexing, and bi-directional streaming for low-latency microservice communication.
+
+## Concurrency Models & Asynchronous Execution in Python
+- Global Interpreter Lock (GIL): CPython mutex preventing multiple native threads from executing Python bytecode simultaneously.
+- AsyncIO Event Loop: Single-threaded cooperative multitasking using non-blocking I/O operations (`async`/`await`). Ideal for I/O-bound workloads (database queries, network API calls, file read/write).
+- Multiprocessing vs Threading:
+  - ThreadPoolExecutor: Concurrent I/O-bound tasks where thread memory overhead is lower than full process spawns.
+  - ProcessPoolExecutor: CPU-bound tasks (intensive mathematical calculations, image transformations, local ML inference) bypassing GIL by spawning distinct operating system processes.
+- Database Connection Pooling: Maintaining an active pool of open database connections (e.g., SQLAlchemy `QueuePool`, PgBouncer) to eliminate TCP handshake and TLS negotiation latency on every API request.
+
+## Authentication, Authorization & API Security
+- Token-Based Authentication (JWT): JSON Web Tokens composed of Header, Payload (claims, expiration `exp`), and cryptographic Signature (HMAC-SHA256 or RSA/ECDSA asymmetric keys). Stateless verification without database lookups.
+- Token Revocation Strategies: Short-lived Access Tokens (e.g., 15 mins) paired with HttpOnly Refresh Tokens rotated on each use, accompanied by Redis-backed blocklists for instant invalidation.
+- Rate Limiting Algorithms:
+  - Token Bucket: Tokens added at constant rate; requests consume tokens. Allows bursts up to bucket capacity.
+  - Leaky Bucket: Requests enter queue and are processed at smooth constant rate.
+  - Sliding Window Log / Counter: Precise request counting per IP or API key across sliding time windows in Redis.
+- Defense-in-Depth: Input validation and sanitization (Pydantic / Zod), Parameterized SQL queries preventing SQL injection, CORS origin whitelisting, Content Security Policy (CSP), and TLS 1.3 encryption.

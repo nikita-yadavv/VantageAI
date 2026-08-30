@@ -1,0 +1,33 @@
+# Knowledge Corpus: High-Scale Distributed Systems & Backend Architecture
+
+## Architectural Principles & Scalability
+- Horizontal vs Vertical Scaling: Scaling out (adding commodity servers behind load balancers) versus scaling up (upgrading CPU/RAM on a single server). Scalability requires stateless application servers.
+- CAP Theorem & PACELC:
+  - Consistency: Every read receives the most recent write or an error.
+  - Availability: Every non-failing node returns a non-error response without guarantee of most recent write.
+  - Partition Tolerance: System continues operating despite arbitrary network partition drops.
+  - PACELC Extension: In case of Partition (P), choose Availability (A) or Consistency (C); Else (E), choose Latency (L) or Consistency (C).
+- ACID vs BASE:
+  - ACID (Relational databases like PostgreSQL): Atomicity, Consistency, Isolation, Durability.
+  - BASE (Distributed NoSQL systems like Cassandra, DynamoDB): Basically Available, Soft state, Eventual consistency.
+
+## Caching Patterns & Invalidation Strategies
+Caching minimizes database read pressure and reduces p99 latency:
+- Cache-Aside (Lazy Loading): Application queries cache first; on cache miss, reads from database and populates cache. Simple, resilient to cache node failure, but initial requests suffer miss penalty.
+- Write-Through: Application writes data to cache and database synchronously. Ensures cache freshness at the cost of higher write latency.
+- Write-Back (Write-Behind): Application writes to cache immediately; cache asynchronously flushes batches to database. Extremely fast writes, but risks data loss on cache node crash.
+- Cache Eviction Policies: LRU (Least Recently Used), LFU (Least Frequently Used), FIFO, TTL (Time to Live).
+- Cache Stampede / Thundering Herd: Multiple concurrent requests simultaneously miss a hot key and bombard the database. Mitigated via Mutex Locking (SingleFlight) or Probabilistic Early Expiration (XFetch algorithm).
+
+## Database Partitioning, Sharding & Replication
+- Read Replicas: Primary database handles writes and replicates data asynchronously to secondary read replicas. Helps scale read-heavy workloads but introduces replication lag.
+- Horizontal Sharding: Partitioning tables across separate physical database instances based on a Shard Key (e.g., Hash(user_id) % N or Range-based).
+- Consistent Hashing: Distributes data across a virtual hash ring (e.g., 2^32 keyspace) with virtual nodes. Minimizes key re-mapping when adding or removing database cluster nodes to K/N keys rather than all keys.
+- Two-Phase Commit (2PC) vs SAGA Pattern: 2PC provides atomic distributed transactions across databases with blocking coordinator locks; SAGA pattern coordinates distributed transactions across microservices through a sequence of local transactions with compensating rollback transactions.
+
+## Asynchronous Processing & Message Brokers
+- Event-Driven Architecture: Decouples service dependencies and smooths traffic spikes.
+- Point-to-Point (Queues like RabbitMQ, AWS SQS) vs Publish-Subscribe / Log-based (Apache Kafka, AWS Kinesis):
+  - RabbitMQ: Message acknowledgment, routing keys, dead-letter exchanges (DLX), in-memory queue broker.
+  - Apache Kafka: Distributed append-only commit log partitioned by key, consumer groups tracking offset positions, persistent disk storage, high throughput streaming.
+- Backpressure & Idempotency: Handling producer rates exceeding consumer capacity via rate throttling, exponential backoff with jitter, and deduplication idempotency keys stored in Redis.

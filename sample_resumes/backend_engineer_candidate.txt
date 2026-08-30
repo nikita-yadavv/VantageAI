@@ -1,0 +1,31 @@
+Jordan Hayes
+Email: jordan.hayes@example.com | GitHub: github.com/jordanhayes-dev | Location: San Francisco, CA
+
+SUMMARY
+Senior Backend & Distributed Systems Engineer with 4+ years of experience designing scalable RESTful APIs, high-throughput microservices, and resilient database architectures. Expert in Python (FastAPI, AsyncIO), PostgreSQL, Redis caching strategies, and event-driven messaging with Kafka.
+
+CORE SKILLS
+- Backend & Frameworks: Python, FastAPI, Flask, AsyncIO, SQLAlchemy, Node.js, Go.
+- Distributed Systems & Architecture: Microservices, Load Balancing, Consistent Hashing, CAP Theorem, SAGA Pattern, Caching (Cache-Aside, Write-Through, Redis).
+- Databases & Storage: PostgreSQL, MySQL, Redis, Connection Pooling, Horizontal Sharding, Replication, Index Optimization.
+- Messaging & Concurrency: Apache Kafka, RabbitMQ, Celery, ThreadPoolExecutor, ProcessPoolExecutor, Rate Limiting (Token Bucket).
+- DevOps & Security: Docker, Kubernetes, CI/CD, JWT Authentication, OAuth2, OpenTelemetry.
+
+PROFESSIONAL EXPERIENCE
+
+Backend Engineer | CloudMatrix Systems | 2022 - Present
+- Designed and built high-concurrency RESTful microservices using FastAPI and AsyncIO, handling 15,000+ requests per second at p99 latency < 45ms.
+- Architected multi-tier caching layer using Redis Cache-Aside pattern with singleflight mutex locks, mitigating cache stampede and reducing PostgreSQL read load by 68%.
+- Implemented distributed event streaming pipeline using Apache Kafka with partitioned consumer groups and idempotent message deduplication.
+
+Software Engineer | Apex FinTech | 2020 - 2022
+- Migrated legacy monolithic services to modular FastAPI microservices with SQLAlchemy QueuePool connection pooling and automated migration scripts.
+- Implemented Token Bucket rate limiting middleware and JWT-based authentication with Redis token revocation blocklists.
+- Optimized database indexing and query execution plans, reducing p95 database query latency by 50%.
+
+PROJECTS
+- Distributed URL Shortener: Designed fault-tolerant service using Base62 encoding, Redis caching, and consistent hashing for horizontal database partitioning.
+- Real-time Notification Gateway: Built AsyncIO WebSockets service with RabbitMQ message broker for guaranteed delivery.
+
+EDUCATION
+B.S. in Software Engineering, 2020

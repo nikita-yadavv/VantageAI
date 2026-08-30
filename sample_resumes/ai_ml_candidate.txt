@@ -1,0 +1,30 @@
+Alex Mercer
+Email: alex.mercer@example.com | Phone: +1-555-019-2834 | GitHub: github.com/alexmercer-ai
+
+SUMMARY
+Applied AI & Machine Learning Engineer with 3+ years of experience developing deep learning models, RAG pipelines, and NLP systems. Proficient in PyTorch, Transformers, Scikit-Learn, and Vector Databases with hands-on experience optimizing neural network architectures and deploying production ML microservices.
+
+CORE SKILLS
+- Machine Learning & Deep Learning: Neural Networks, Backpropagation, Decision Trees, Random Forest, XGBoost, SVM, Attention Mechanisms, Transformers, Reinforcement Learning (Q-Learning, MDPs).
+- NLP & LLM Systems: Retrieval-Augmented Generation (RAG), Semantic Search, Embeddings, ChromaDB, Hugging Face, Prompt Engineering, LangChain.
+- Frameworks & Languages: Python, PyTorch, Scikit-Learn, NumPy, Pandas, FastAPI, Docker, Git.
+- Evaluation & Mathematics: Cross-Validation, Bias-Variance Decomposition, Precision/Recall, ROC-AUC, Information Theory, Entropy, Bayesian Inference.
+
+PROFESSIONAL EXPERIENCE
+
+Machine Learning Engineer | NeuralScale AI | 2023 - Present
+- Architected and deployed an enterprise Retrieval-Augmented Generation (RAG) system utilizing ChromaDB vector search and embedding re-ranking, reducing hallucination rate by 34%.
+- Trained and fine-tuned Transformer-based classification models in PyTorch with custom Loss functions and Layer Normalization, improving F1-score from 0.81 to 0.92.
+- Implemented model evaluation pipelines incorporating Stratified K-Fold validation and feature importance analysis using Tree-based SHAP values.
+
+Junior AI Developer | DataVenture Labs | 2021 - 2023
+- Built predictive supervised learning models using Decision Trees, Gradient Boosting, and Support Vector Machines for tabular risk modeling.
+- Conducted error analysis, hyperparameter tuning with Bayesian optimization, and addressed high variance through L2 regularization and Dropout.
+- Engineered data preprocessing pipelines with Scikit-Learn ColumnTransformers to eliminate data leakage.
+
+PROJECTS
+- Autonomous Q-Learning Game Agent: Implemented discrete Markov Decision Process agent using Bellman Optimality equations and epsilon-greedy exploration.
+- Multi-Source RAG Document Assistant: Built FastAPI semantic retrieval search engine utilizing hybrid vector search and cosine similarity scoring.
+
+EDUCATION
+B.S. in Computer Science & Artificial Intelligence, 2021

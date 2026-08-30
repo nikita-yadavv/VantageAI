@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VantageAI | AI Technical Candidate Screening</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            palette: {
+              lightest: '#FEFAFF',
+              lilac: '#EAE2ED',
+              heather: '#D7C9DB',
+              mauve: '#BAA7BF',
+              plum: '#86728B',
+              deep: '#514354',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+            display: ['Outfit', '"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      background-color: #FEFAFF;
+      color: #514354;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .ambient-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      background-color: #FEFAFF;
+    }
+    .ambient-orb {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(80px);
+      opacity: 0.65;
+      will-change: transform;
+      animation: floatOrb 18s ease-in-out infinite alternate;
+    }
+    .orb-1 {
+      width: 600px; height: 600px; top: -150px; left: -100px;
+      background: radial-gradient(circle, #EAE2ED 0%, #D7C9DB 70%, transparent 100%);
+      animation-duration: 22s;
+    }
+    .orb-2 {
+      width: 550px; height: 550px; top: 30%; right: -150px;
+      background: radial-gradient(circle, #D7C9DB 0%, #BAA7BF 65%, transparent 100%);
+      animation-duration: 26s; animation-delay: -5s;
+    }
+    .orb-3 {
+      width: 700px; height: 700px; bottom: -200px; left: 20%;
+      background: radial-gradient(circle, #EAE2ED 0%, rgba(186, 167, 191, 0.4) 60%, transparent 100%);
+      animation-duration: 20s; animation-delay: -10s;
+    }
+    @keyframes floatOrb {
+      0% { transform: translate(0px, 0px) scale(1); }
+      50% { transform: translate(30px, -40px) scale(1.06); }
+      100% { transform: translate(-30px, 30px) scale(0.95); }
+    }
+    .glass-panel {
+      background: rgba(254, 250, 255, 0.72);
+      backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(215, 201, 219, 0.75);
+      box-shadow: 0 16px 36px -10px rgba(81, 67, 84, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid rgba(215, 201, 219, 0.65);
+      box-shadow: 0 10px 25px -5px rgba(81, 67, 84, 0.05), inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+      transition: all 0.25s ease;
+    }
+    .glass-card:hover {
+      background: rgba(255, 255, 255, 0.92);
+      border-color: #86728B;
+      transform: translateY(-2px);
+      box-shadow: 0 20px 35px -8px rgba(81, 67, 84, 0.12), inset 0 1px 1px 0 rgba(255, 255, 255, 1);
+    }
+    .glass-input {
+      background: rgba(254, 250, 255, 0.65);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(215, 201, 219, 0.8);
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #EAE2ED; }
+    ::-webkit-scrollbar-thumb { background: #BAA7BF; border-radius: 4px; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-palette-mauve selection:text-palette-deep relative">
+
+  <!-- Ambient Animated Glass Mesh Background -->
+  <div class="ambient-bg">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 w-full border-b border-palette-heather/70 bg-palette-lightest/90 backdrop-blur-md">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 cursor-pointer" onclick="resetSession()">
+        <div class="w-8 h-8 rounded-lg bg-palette-deep flex items-center justify-center shadow-sm">
+          <i data-lucide="sparkles" class="w-4 h-4 text-palette-lightest"></i>
+        </div>
+        <div class="flex items-baseline gap-1.5">
+          <span class="font-bold text-lg tracking-tight text-palette-deep font-display">
+            Vantage<span class="text-palette-plum font-normal">AI</span>
+          </span>
+          <span class="text-[10px] uppercase tracking-wider text-palette-plum font-mono font-medium">Screening</span>
+        </div>
+      </div>
+      <button id="reset-btn" onclick="resetSession()" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-palette-lilac/60 hover:bg-palette-heather border border-palette-heather text-palette-deep transition-all">
+        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-palette-plum"></i>
+        <span>Reset</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8">
+    
+    <!-- VIEW 1: SETUP -->
+    <div id="setup-view" class="space-y-6">
+      <div class="text-center max-w-xl mx-auto space-y-1.5 pt-2 pb-4">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-palette-deep tracking-tight font-display">
+          AI Technical Interview Screening
+        </h1>
+        <p class="text-xs sm:text-sm text-palette-plum">
+          Select a target role and upload your resume to begin your adaptive technical assessment.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-white border border-palette-heather shadow-sm space-y-6">
+        <!-- 1. Role Selection -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-palette-plum mb-2">1. Select Role</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="roles-grid"></div>
+        </div>
+
+        <!-- 2. Resume Upload -->
+        <div class="pt-2 border-t border-palette-heather/80">
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-palette-plum">2. Upload Resume</label>
+            <div class="flex items-center gap-1.5 text-xs text-palette-plum">
+              <span>Quick fill:</span>
+              <button onclick="loadSample(0)" class="px-2 py-0.5 rounded bg-white hover:bg-palette-lilac border border-palette-heather text-[11px] font-semibold text-palette-deep">Alex (AI/ML)</button>
+              <button onclick="loadSample(1)" class="px-2 py-0.5 rounded bg-white hover:bg-palette-lilac border border-palette-heather text-[11px] font-semibold text-palette-deep">Jordan (Backend)</button>
+              <button onclick="loadSample(2)" class="px-2 py-0.5 rounded bg-white hover:bg-palette-lilac border border-palette-heather text-[11px] font-semibold text-palette-deep">Priya (Data)</button>
+            </div>
+          </div>
+
+          <div onclick="document.getElementById('file-input').click()" class="p-6 rounded-xl border-2 border-dashed border-palette-heather hover:border-palette-mauve bg-white hover:bg-palette-lilac/10 cursor-pointer text-center space-y-1">
+            <input type="file" id="file-input" accept=".pdf,.txt" class="hidden" onchange="uploadFile(this.files[0])" />
+            <i data-lucide="upload" class="w-5 h-5 mx-auto text-palette-plum"></i>
+            <p class="text-xs font-semibold text-palette-deep">Drop your resume here, or <span class="underline text-palette-plum">browse</span></p>
+            <p class="text-[10px] text-palette-plum">PDF or TXT format</p>
+          </div>
+
+          <div id="parsed-resume-box" class="hidden mt-3 p-3 rounded-xl bg-palette-lilac/30 border border-palette-heather space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span id="p-name" class="font-bold text-palette-deep"></span>
+              <span id="p-skills-count" class="text-palette-plum font-mono text-[11px]"></span>
+            </div>
+            <div id="p-skills" class="flex flex-wrap gap-1 max-h-16 overflow-y-auto"></div>
+          </div>
+        </div>
+
+        <!-- Start Bar -->
+        <div class="pt-3 border-t border-palette-heather/80 flex items-center justify-between">
+          <p id="start-status-text" class="text-xs text-palette-plum">Upload resume to continue</p>
+          <button id="start-btn" onclick="startInterview()" disabled class="px-6 py-2.5 rounded-xl font-bold text-xs bg-palette-deep hover:bg-palette-plum text-palette-lightest disabled:opacity-40 flex items-center gap-2 transition-all shadow-sm">
+            <span>Start Interview</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: INTERVIEW -->
+    <div id="interview-view" class="hidden max-w-3xl mx-auto space-y-5">
+      <div class="flex items-center justify-between text-xs font-semibold text-palette-plum">
+        <span id="q-progress-text">Question 1 of 5</span>
+        <span id="q-role-text" class="font-mono text-palette-deep">AI / Machine Learning Engineer</span>
+      </div>
+
+      <div class="w-full bg-palette-heather/50 rounded-full h-1.5 overflow-hidden">
+        <div id="q-progress-bar" class="bg-palette-deep h-full rounded-full transition-all duration-300" style="width: 20%"></div>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-white border border-palette-heather shadow-sm space-y-4">
+        <div class="space-y-1">
+          <div id="q-topic" class="text-[11px] font-bold uppercase tracking-wider text-palette-plum font-mono">Topic: Decision Trees</div>
+          <h2 id="q-text" class="text-base sm:text-lg font-bold text-palette-deep leading-snug font-display">Loading question...</h2>
+        </div>
+
+        <div class="space-y-3 pt-2">
+          <div id="answer-input-container" class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="text-[11px] font-bold uppercase tracking-wider text-palette-plum">Technical Response:</label>
+              <button type="button" onclick="quickFillDemoAnswer()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-palette-lilac hover:bg-palette-heather border border-palette-heather text-[11px] font-semibold text-palette-deep transition-all">
+                <i data-lucide="zap" class="w-3 h-3 text-palette-plum"></i>
+                <span>Quick Fill (Demo/Testing)</span>
+              </button>
+            </div>
+            <textarea id="answer-input" rows="5" placeholder="Type your technical response here or click 'Quick Fill (Demo/Testing)'..." class="w-full p-3.5 rounded-xl bg-palette-lightest border border-palette-heather focus:border-palette-deep focus:ring-1 focus:ring-palette-deep text-palette-deep text-sm placeholder-palette-plum/60 resize-y"></textarea>
+          </div>
+
+          <div id="feedback-card" class="hidden p-5 rounded-xl bg-palette-lilac/40 border border-palette-heather space-y-3">
+            <div class="flex items-center justify-between text-xs font-bold text-palette-deep">
+              <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i> Response Evaluated</span>
+              <span id="fb-score" class="font-mono bg-palette-deep text-palette-lightest px-2.5 py-0.5 rounded-full">Score: 9/10</span>
+            </div>
+            <p id="fb-text" class="text-xs text-palette-deep leading-relaxed bg-white p-3 rounded-lg border border-palette-heather"></p>
+            <div class="flex justify-end pt-2">
+              <button id="next-q-btn" onclick="handleNextQuestionClick()" class="px-5 py-2.5 rounded-xl font-bold text-xs bg-palette-deep hover:bg-palette-plum text-palette-lightest flex items-center gap-2 shadow-sm">
+                <span id="next-q-btn-text">Next Question</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <div id="submit-row" class="flex justify-end pt-1">
+            <button id="submit-btn" onclick="submitAnswer()" class="px-5 py-2.5 rounded-xl font-bold text-xs bg-palette-deep hover:bg-palette-plum text-palette-lightest flex items-center gap-2 transition-all shadow-sm">
+              <span>Submit Answer</span>
+              <i data-lucide="send" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: REPORT -->
+    <div id="report-view" class="hidden max-w-3xl mx-auto space-y-6 pb-8">
+      <div class="p-6 rounded-2xl bg-white border border-palette-heather shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="text-[11px] font-mono uppercase tracking-wider text-palette-plum font-semibold">Assessment Results</span>
+          <h1 id="rep-name" class="text-xl font-bold text-palette-deep font-display mt-0.5">Alex Mercer</h1>
+          <p id="rep-role" class="text-xs text-palette-plum mt-0.5">Role: AI / Machine Learning Engineer</p>
+        </div>
+        <div class="flex items-center gap-3 bg-palette-lilac/30 p-3 rounded-xl border border-palette-heather">
+          <div class="text-right">
+            <div class="text-[10px] font-bold text-palette-plum uppercase font-mono">Score</div>
+            <div class="text-2xl font-extrabold text-palette-deep font-mono"><span id="rep-score">90</span><span class="text-xs text-palette-plum font-normal">/100</span></div>
+          </div>
+          <div class="h-8 w-px bg-palette-heather"></div>
+          <div>
+            <div class="text-[10px] font-bold text-palette-plum uppercase font-mono">Rating</div>
+            <div id="rep-rec" class="text-xs font-bold text-palette-deep mt-0.5">Principal Mastery</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-white border border-palette-heather shadow-sm space-y-2">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-palette-plum font-mono">Executive Summary</h3>
+        <p id="rep-summary" class="text-xs text-palette-deep leading-relaxed bg-palette-lilac/20 p-3 rounded-xl border border-palette-heather"></p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-5 rounded-2xl bg-white border border-palette-heather shadow-sm space-y-3">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-palette-plum font-mono">Topic Breakdown</h3>
+          <div id="rep-categories" class="space-y-2.5"></div>
+        </div>
+        <div class="p-5 rounded-2xl bg-white border border-palette-heather shadow-sm space-y-3">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-palette-plum font-mono mb-2">Key Strengths</h3>
+            <ul id="rep-strengths" class="space-y-1.5"></ul>
+          </div>
+          <div class="pt-2 border-t border-palette-heather">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-palette-plum font-mono mb-2">Areas for Improvement</h3>
+            <ul id="rep-growth" class="space-y-1.5"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-2">
+        <button onclick="resetSession()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-white hover:bg-palette-lilac border border-palette-heather text-palette-deep flex items-center gap-1.5">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-palette-plum"></i>
+          <span>New Assessment</span>
+        </button>
+        <button onclick="downloadReportJSON()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-palette-deep hover:bg-palette-plum text-palette-lightest flex items-center gap-1.5 shadow-sm">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          <span>Export JSON</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-palette-heather/60 py-4 text-center text-[11px] text-palette-plum font-mono">
+    <p>VantageAI • Adaptive Technical Screening</p>
+  </footer>
+
+  <script>
+    const ROLES = [
+      { id: 'ai', title: 'AI / Machine Learning Engineer', icon: 'brain' },
+      { id: 'backend', title: 'Backend Engineer', icon: 'server' },
+      { id: 'data', title: 'Data Scientist', icon: 'database' },
+      { id: 'theory', title: 'Theoretical ML Engineer', icon: 'sparkles' },
+    ];
+
+    const SAMPLES = [
+      { name: 'Alex Mercer', role: 'AI / Machine Learning Engineer', text: 'Alex Mercer | AI Engineer | Skills: PyTorch, Transformers, Backpropagation, Decision Trees, SVM, Q-Learning, RAG, ChromaDB' },
+      { name: 'Jordan Hayes', role: 'Backend Engineer', text: 'Jordan Hayes | Backend Engineer | Skills: Python, FastAPI, AsyncIO, PostgreSQL, Redis, Cache-Aside, Kafka, Sharding, Docker' },
+      { name: 'Priya Sharma', role: 'Data Scientist', text: 'Priya Sharma | Data Scientist | Skills: Scikit-Learn Pipelines, ColumnTransformer, Pandas, SMOTE, Class Imbalance, XGBoost, Model Drift' }
+    ];
+
+    let state = {
+      selectedRole: 'AI / Machine Learning Engineer',
+      parsedResume: null,
+      sessionData: null,
+      currentQuestion: null,
+      reportData: null,
+      lastFeedback: null
+    };
+
+    function init() {
+      const grid = document.getElementById('roles-grid');
+      grid.innerHTML = ROLES.map(r => `
+        <button type="button" onclick="selectRole('${r.title}')" class="role-btn p-3 rounded-xl text-left border flex items-center justify-between transition-all ${r.title === state.selectedRole ? 'bg-palette-deep text-palette-lightest border-palette-deep shadow-sm' : 'bg-white text-palette-deep border-palette-heather hover:border-palette-mauve'}">
+          <span class="text-xs font-semibold">${r.title}</span>
+          ${r.title === state.selectedRole ? '<i data-lucide="check" class="w-3.5 h-3.5"></i>' : ''}
+        </button>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function selectRole(r) {
+      state.selectedRole = r;
+      init();
+    }
+
+    async function loadSample(idx) {
+      const s = SAMPLES[idx];
+      selectRole(s.role);
+      const res = await fetch('/api/v1/resume/parse-text', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ raw_text: s.text, candidate_name: s.name, email: `${s.name.toLowerCase().replace(' ', '.')}@example.com` })
+      });
+      const data = await res.json();
+      onParsed(data);
+    }
+
+    async function uploadFile(file) {
+      if (!file) return;
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/v1/resume/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      onParsed(data);
+    }
+
+    function onParsed(data) {
+      state.parsedResume = data;
+      document.getElementById('parsed-resume-box').classList.remove('hidden');
+      document.getElementById('p-name').textContent = data.parsed_data.candidate_name;
+      document.getElementById('p-skills-count').textContent = `${data.parsed_data.skills.length} skills detected`;
+      document.getElementById('p-skills').innerHTML = data.parsed_data.skills.map(sk => `
+        <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white border border-palette-heather text-palette-deep">${sk}</span>
+      `).join('');
+      document.getElementById('start-status-text').textContent = `Ready for ${data.parsed_data.candidate_name}`;
+      document.getElementById('start-btn').disabled = false;
+      lucide.createIcons();
+    }
+
+    async function startInterview() {
+      const btn = document.getElementById('start-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span>Starting...</span>';
+
+      const res = await fetch('/api/v1/interview/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resume_id: state.parsedResume.resume_id, target_role: state.selectedRole, difficulty_level: 'intermediate', total_questions: 5 })
+      });
+      const data = await res.json();
+      state.sessionData = data;
+      state.currentQuestion = data.current_question;
+      
+      document.getElementById('setup-view').classList.add('hidden');
+      document.getElementById('interview-view').classList.remove('hidden');
+      document.getElementById('reset-btn').classList.remove('hidden');
+      document.getElementById('reset-btn').classList.add('flex');
+      renderQ();
+    }
+
+    function renderQ() {
+      const q = state.currentQuestion;
+      const s = state.sessionData;
+      document.getElementById('q-progress-text').textContent = `Question ${q.order_index} of ${s.total_questions}`;
+      document.getElementById('q-role-text').textContent = s.target_role;
+      document.getElementById('q-topic').textContent = `Topic: ${q.topic}`;
+      document.getElementById('q-text').textContent = q.question_text;
+      document.getElementById('q-progress-bar').style.width = `${(q.order_index / s.total_questions) * 100}%`;
+      
+      document.getElementById('answer-input-container').classList.remove('hidden');
+      document.getElementById('answer-input').value = '';
+      document.getElementById('feedback-card').classList.add('hidden');
+      document.getElementById('submit-row').classList.remove('hidden');
+      document.getElementById('submit-btn').disabled = false;
+      document.getElementById('submit-btn').innerHTML = '<span>Submit Answer</span><i data-lucide="send" class="w-3.5 h-3.5"></i>';
+      lucide.createIcons();
+    }
+
+    const DEMO_ANSWERS = {
+      'Decision Trees': "Entropy is defined as -sum(p_i * log2(p_i)), measuring uncertainty in dataset S. Information Gain is the reduction in entropy when partitioning on attribute A: Gain(S, A) = Entropy(S) - sum((|S_v|/|S|) * Entropy(S_v)). C4.5 addresses ID3's bias toward high-cardinality attributes by using Gain Ratio = Gain(S, A) / SplitInformation(S, A) to penalize fragmented splits.",
+      'Neural Networks': "Backpropagation calculates loss gradients across layers via the chain rule: dL/dw = (dL/da) * (da/dz) * (dz/dw). Sigmoid suffers from vanishing gradients because its derivative maxes out at 0.25, while ReLU f(x)=max(0,x) maintains a constant gradient of 1 for positive activations, avoiding saturation in deep architectures.",
+      'Model Generalization': "The Bias-Variance tradeoff balances underfitting and overfitting: Expected Error = Bias^2 + Variance + Noise. L1 regularization adds lambda*|w| which drives weights to exact zeros producing sparse feature selection, whereas L2 adds lambda*||w||^2 to shrink weights continuously and reduce model variance.",
+      'Data Preprocessing': "Data leakage occurs when test set distribution leaks into the training pipeline. Scikit-Learn Pipelines prevent this by ensuring transformations (e.g., StandardScaler) execute fit() strictly on the training folds and only transform() on test folds during cross-validation.",
+      'Distributed Caching': "We implement Cache-Aside with Redis: read requests query cache first; on a miss, fetch from DB and write to Redis with a TTL. To prevent cache stampedes on hot keys, we use distributed mutex locks (singleflight) and apply jitter to TTL expirations. On updates, we invalidate the cache key.",
+      'Database Sharding': "Sharding horizontally partitions data across multiple database instances using Consistent Hashing on the shard key. Virtual nodes on the hash ring ensure uniform distribution and guarantee that adding or removing a node only requires migrating K/N keys rather than re-indexing the whole cluster.",
+      'Attention Mechanisms': "Scaled Dot-Product Attention is computed as softmax((Q * K^T) / sqrt(d_k)) * V. The scaling factor 1/sqrt(d_k) counteracts large dot products in high dimensions that would otherwise push the softmax into vanishing gradient regions with near-zero derivatives."
+    };
+
+    function quickFillDemoAnswer() {
+      if (!state.currentQuestion) return;
+      const topic = state.currentQuestion.topic || '';
+      const text = state.currentQuestion.question_text || '';
+      let matched = null;
+      for (const [key, ans] of Object.entries(DEMO_ANSWERS)) {
+        if (topic.toLowerCase().includes(key.toLowerCase()) || text.toLowerCase().includes(key.toLowerCase())) {
+          matched = ans;
+          break;
+        }
+      }
+      if (!matched) {
+        matched = `From a foundational and engineering perspective, ${topic} balances mathematical guarantees with practical scalability. We formulate the objective function, analyze gradient bounds and edge conditions, and structure the implementation to minimize computational overhead while guaranteeing convergence.`;
+      }
+      document.getElementById('answer-input').value = matched;
+    }
+
+    async function submitAnswer() {
+      const txt = document.getElementById('answer-input').value.trim();
+      if (!txt) return;
+
+      const subBtn = document.getElementById('submit-btn');
+      subBtn.disabled = true;
+      subBtn.innerHTML = '<span>Evaluating...</span>';
+
+      const res = await fetch(`/api/v1/interview/${state.sessionData.session_id}/submit-answer`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question_id: state.currentQuestion.id, answer_text: txt })
+      });
+      const data = await res.json();
+      state.lastFeedback = data;
+
+      document.getElementById('fb-score').textContent = `Score: ${data.score}/10`;
+      document.getElementById('fb-text').textContent = data.feedback;
+      document.getElementById('next-q-btn-text').textContent = data.is_completed ? 'View Assessment Results' : 'Next Question';
+      document.getElementById('feedback-card').classList.remove('hidden');
+      document.getElementById('answer-input-container').classList.add('hidden');
+      document.getElementById('submit-row').classList.add('hidden');
+      lucide.createIcons();
+    }
+
+    function handleNextQuestionClick() {
+      if (!state.lastFeedback) return;
+      if (state.lastFeedback.is_completed) {
+        showReport(state.sessionData.session_id);
+      } else if (state.lastFeedback.next_question) {
+        state.currentQuestion = state.lastFeedback.next_question;
+        renderQ();
+      }
+    }
+
+    async function showReport(sessionId) {
+      document.getElementById('interview-view').classList.add('hidden');
+      document.getElementById('report-view').classList.remove('hidden');
+
+      const res = await fetch(`/api/v1/evaluation/${sessionId}/report`);
+      const r = await res.json();
+      state.reportData = r;
+
+      document.getElementById('rep-name').textContent = r.candidate_name;
+      document.getElementById('rep-role').textContent = `Role: ${r.target_role}`;
+      document.getElementById('rep-score').textContent = r.overall_score;
+      document.getElementById('rep-rec').textContent = r.recommendation;
+      document.getElementById('rep-summary').textContent = r.executive_summary;
+
+      document.getElementById('rep-categories').innerHTML = Object.entries(r.category_scores).map(([c, s]) => `
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs"><span class="font-medium text-palette-deep">${c}</span><span class="font-bold text-palette-deep font-mono">${s}%</span></div>
+          <div class="w-full bg-palette-heather/50 rounded-full h-1.5 overflow-hidden"><div class="h-full bg-palette-deep rounded-full" style="width: ${s}%"></div></div>
+        </div>
+      `).join('');
+
+      document.getElementById('rep-strengths').innerHTML = r.key_strengths.slice(0, 2).map(s => `
+        <li class="text-xs text-palette-deep flex items-start gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-palette-deep mt-1 flex-shrink-0"></span><span>${s}</span></li>
+      `).join('');
+
+      document.getElementById('rep-growth').innerHTML = r.areas_for_growth.slice(0, 2).map(g => `
+        <li class="text-xs text-palette-deep flex items-start gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-palette-plum mt-1 flex-shrink-0"></span><span>${g}</span></li>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function downloadReportJSON() {
+      if (!state.reportData) return;
+      const blob = new Blob([JSON.stringify(state.reportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `assessment_report_${state.reportData.session_id}.json`;
+      a.click();
+    }
+
+    function resetSession() {
+      state.parsedResume = null;
+      state.sessionData = null;
+      state.currentQuestion = null;
+      state.reportData = null;
+      state.lastFeedback = null;
+      document.getElementById('interview-view').classList.add('hidden');
+      document.getElementById('report-view').classList.add('hidden');
+      document.getElementById('setup-view').classList.remove('hidden');
+      document.getElementById('reset-btn').classList.add('hidden');
+      document.getElementById('parsed-resume-box').classList.add('hidden');
+      document.getElementById('start-status-text').textContent = 'Upload resume to continue';
+      document.getElementById('start-btn').disabled = true;
+      document.getElementById('start-btn').innerHTML = '<span>Start Interview</span><i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>';
+      lucide.createIcons();
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
